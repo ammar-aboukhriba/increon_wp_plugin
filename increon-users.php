@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Increon Users
- * Plugin URI:        https://github.com/flashpack
+ * Plugin URI:        https://github.com/ammar-aboukhriba/increon_wp_plugin
  * Description:       WordPress-Users in tabellarischer Form
  * Version:           1.0.0
  * Requires at least: 5.2
