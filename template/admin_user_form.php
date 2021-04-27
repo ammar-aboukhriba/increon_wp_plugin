@@ -24,6 +24,7 @@
                             <label for="password"><?php _e('Passwort:')?>*</label>
                             <br>	
                             <input id="password" name="password" type="password" value="<?php echo esc_attr($item['password'])?>"  >
+                            Lassen Sie das Feld leer, wenn Sie das Passwort nicht ändern möchten
                         </p>
                        
                     </div>

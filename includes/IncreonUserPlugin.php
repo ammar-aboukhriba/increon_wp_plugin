@@ -66,7 +66,6 @@ class IncreonUserPlugin{
     }
     
     function user_table_index(){
-        $users = get_users(); 
         require_once $this->plugin_dir_path.'template/admin_table_index.php';
     }
     function user_table_shortcode(){
@@ -105,10 +104,19 @@ class IncreonUserPlugin{
                         $error = true;
                 }else{
                     $user_id =  $_POST['id'];
-                    wp_update_user([
-                        'ID'=>$user_id,
-                        'user_email'=>$item['email_address'],
-                    ]);
+                    if(!empty($item['password'])){
+                        wp_update_user([
+                            'ID'=>$user_id,
+                            'user_login'=>$item['login_name'],
+                            'user_pass'=>$item['password'],
+                            'user_email'=>$item['email_address'],
+                        ]);
+                    }else{
+                        wp_update_user([
+                            'ID'=>$user_id,
+                            'user_email'=>$item['email_address'],
+                        ]);
+                    }
                     $user = new WP_User( $user_id );
                     $item['login_name']=$user->user_login;
 
