@@ -17,13 +17,44 @@ class IncreonUserPlugin{
        add_action('admin_menu', [$this,'add_admin_menu']);
        add_action('admin_enqueue_scripts',[$this,'enqueue']);
        add_action('wp_enqueue_scripts',[$this,'enqueue']);
+       //add_action( 'admin_footer', [$this,'data_table_javascript'] ); 
+       add_action( 'wp_ajax_get_data_ajax', [$this,'get_data_ajax'] );
        add_shortcode( 'increon_users_shortcode', [$this,'user_table_shortcode'] );
     }
-
+    function data_table_javascript(){
+        require_once $this->plugin_dir_path.'template/admin_data_table_javascript.php';
+    }
+    function get_data_ajax(){
+        $response = [
+            'data'=>[]
+        ];
+        $users = get_users();
+        foreach($users as $user){
+            $user_meta = get_user_meta($user->ID);
+            $user_data=[];
+            if(is_admin()){
+               array_push($user_data, '<a href="'.get_admin_url(get_current_blog_id(), 'admin.php?page=increon_user_form&id='.$user->ID).'">'.$user->user_login.'</a>');
+            }else{
+             array_push($user_data,$user->user_login);
+            }
+            array_push($user_data, (isset($user_meta['first_name'][0]) ? $user_meta['first_name'][0]:'') );
+            array_push($user_data, (isset($user_meta['last_name'][0]) ? $user_meta['last_name'][0]:'') );
+            array_push($user_data, (isset($user_meta['address'][0]) ? $user_meta['address'][0]:'') );
+            array_push($user_data, (isset($user_meta['phone'][0]) ? $user_meta['phone'][0]:'') );
+            
+            array_push($response['data'],$user_data);
+            
+        }
+        echo json_encode($response);
+        wp_die();
+    }
     function enqueue(){
         wp_enqueue_style('increonDataTableStyle1',plugins_url('/DataTables/datatables.min.css',__FILE__));
         wp_enqueue_script('increonDataTableScript1',plugins_url('/DataTables/jquery-3.3.1.min.js',__FILE__));
         wp_enqueue_script('increonDataTableScript3',plugins_url('/DataTables/datatables.min.js',__FILE__));
+        wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
+        wp_localize_script( 'ajax-script', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+
     }
     
     function add_admin_menu()

@@ -9,25 +9,6 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
-        foreach($users as $user):
-            $user_meta = get_user_meta($user->ID);
-        ?>
-        <tr>
-            <?php if(is_admin()): ?>
-                <td><?='<a href="'.get_admin_url(get_current_blog_id(), 'admin.php?page=increon_user_form&id='.$user->ID).'">'.$user->user_login.'</a>'?></td>
-            <?php else: ?>
-                <td><?=$user->user_login?></td>
-            <?php endif; ?>
-            <td><?php echo (isset($user_meta['first_name'][0]) ? $user_meta['first_name'][0] :'' )?></td>
-            <td><?php echo (isset($user_meta['last_name'][0]) ? $user_meta['last_name'][0] :'' )?></td>
-            <td><?php echo (isset($user_meta['address'][0]) ? $user_meta['address'][0] :'' )?></td>
-            <td><?php echo (isset($user_meta['phone'][0]) ? $user_meta['phone'][0] :'' )?></td>
-        </tr>
-        <?php
-        endforeach;
-        ?>
-
     </tbody>
     <tfoot>
         <tr>
@@ -39,8 +20,17 @@
         </tr>
     </tfoot>
 </table>
+
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#increon_users_table').DataTable();
+        $('#increon_users_table').DataTable({
+            ajax:{
+                url:my_ajax_object.ajax_url,
+                type:'POST',
+                data:{
+                    'action':'get_data_ajax'
+                }
+            }
+        });
     } );
 </script>

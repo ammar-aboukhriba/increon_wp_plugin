@@ -84,7 +84,6 @@
                     </div>
                     
                     
-            </div>
             <input type="submit" value="<?php _e('Speichern')?>" id="submit" class="button-primary" name="submit">
     </form>
 </div>
